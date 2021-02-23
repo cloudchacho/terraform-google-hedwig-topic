@@ -3,24 +3,30 @@ resource "google_pubsub_topic" "topic" {
 }
 
 locals {
-  iam_service_accounts = formatlist("serviceAccount:%s", flatten(var.iam_service_accounts))
+  iam_service_accounts = formatlist("serviceAccount:%s", compact(flatten(var.iam_service_accounts)))
 }
 
 data "google_iam_policy" "topic_policy" {
-  binding {
-    members = local.iam_service_accounts
-    role    = "roles/pubsub.publisher"
+  dynamic "binding" {
+    for_each = local.iam_service_accounts
+
+    content {
+      members = [binding.value]
+      role    = "roles/pubsub.publisher"
+    }
   }
 
-  binding {
-    members = local.iam_service_accounts
-    role    = "roles/pubsub.viewer"
+  dynamic "binding" {
+    for_each = local.iam_service_accounts
+
+    content {
+      members = [binding.value]
+      role    = "roles/pubsub.viewer"
+    }
   }
 }
 
 resource "google_pubsub_topic_iam_policy" "topic_policy" {
-  count = length(var.iam_service_accounts) == 0 ? 0 : 1
-
   policy_data = data.google_iam_policy.topic_policy.policy_data
   topic       = google_pubsub_topic.topic.name
 }
