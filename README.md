@@ -12,7 +12,7 @@ creates Hedwig topics.
 
 ```hcl
 module "topic-dev-user-updated" {
-  source = "standard-ai/hedwig-topic/google"
+  source = "cloudchacho/hedwig-topic/google"
   topic  = "dev-user-updated-v1"
 }
 ```
@@ -56,8 +56,8 @@ The Pub/Sub topic name will be prefixed by `hedwig-`.
 
 ## Release Notes
 
-[Github Releases](https://github.com/standard-ai/terraform-google-hedwig-topic/releases)
+[Github Releases](https://github.com/cloudchacho/terraform-google-hedwig-topic/releases)
 
 ## How to publish
 
-Go to [Terraform Registry](https://registry.terraform.io/modules/standard-ai/hedwig-topic/google), and Resync module.
+Go to [Terraform Registry](https://registry.terraform.io/modules/cloudchacho/hedwig-topic/google), and Resync module.
