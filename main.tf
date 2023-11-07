@@ -4,11 +4,12 @@ resource "google_pubsub_topic" "topic" {
 
 locals {
   iam_service_accounts = formatlist("serviceAccount:%s", compact(flatten(var.iam_service_accounts)))
+  iam_members = concat(local.iam_service_accounts, compact(flatten(var.iam_members)))
 }
 
 data "google_iam_policy" "topic_policy" {
   dynamic "binding" {
-    for_each = local.iam_service_accounts
+    for_each = local.iam_members
 
     content {
       members = [binding.value]
@@ -17,7 +18,7 @@ data "google_iam_policy" "topic_policy" {
   }
 
   dynamic "binding" {
-    for_each = local.iam_service_accounts
+    for_each = local.iam_members
 
     content {
       members = [binding.value]

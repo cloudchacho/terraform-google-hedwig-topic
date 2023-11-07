@@ -39,7 +39,12 @@ variable "dataflow_output_filename_prefix" {
 }
 
 variable "iam_service_accounts" {
-  description = "The list of IAM service accounts to create exclusive IAM permissions for the topic. Flattens a list of list if necessary."
+  description = "(DEPRECATED: use members instead) The list of IAM service accounts to create exclusive IAM permissions for the topic. Flattens a list of list if necessary."
+  default     = []
+}
+
+variable "iam_members" {
+  description = "The list of IAM members to create exclusive IAM permissions for the topic. Flattens a list of list if necessary. The values must include appropriate IAM prefix, e.g. `group:` for google groups."
   default     = []
 }
 
