@@ -4,7 +4,7 @@ resource "google_pubsub_topic" "topic" {
 
 locals {
   iam_service_accounts = formatlist("serviceAccount:%s", compact(flatten(var.iam_service_accounts)))
-  iam_members = sort(toset(concat(local.iam_service_accounts, compact(flatten(var.iam_members)))))
+  iam_members          = sort(toset(concat(local.iam_service_accounts, compact(flatten(var.iam_members)))))
 }
 
 data "google_iam_policy" "topic_policy" {
@@ -57,7 +57,7 @@ resource "google_dataflow_job" "firehose" {
   }
 }
 
-data google_project current {}
+data "google_project" "current" {}
 
 locals {
   title_suffix  = var.alerting_project != data.google_project.current.project_id ? format(" (%s)", data.google_project.current.name) : ""
