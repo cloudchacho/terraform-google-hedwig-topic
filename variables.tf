@@ -3,9 +3,21 @@ variable "topic" {
 }
 
 variable "enable_firehose_all_messages" {
-  description = "Should all messages published to this topic be firehosed into Cloud Storage"
+  description = "Should all messages published to this topic be firehosed—that is, saved—to Cloud Storage"
   type        = bool
   default     = false
+}
+
+variable "firehose_bucket" {
+  description = "Variable firehose_bucket declares the bucket for firehose—that is, saved—messages (should already exist)"
+  type        = string
+  default     = ""
+}
+
+variable "firehose_prefix" {
+  description = "Variable firehose_prefix declares the prefix for firehose—that is, saved—messages. Note: The \"<topic>\" string is replaced by var.topic; for example, \"myenv/<topic>/\" variable becomes \"myenv/mytopic/\" string. This confusing approach enables prefixing all topics in a for-loop."
+  type        = string
+  default     = ""
 }
 
 variable "dataflow_tmp_gcs_location" {
