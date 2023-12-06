@@ -20,6 +20,18 @@ variable "firehose_prefix" {
   default     = ""
 }
 
+variable "firehose_max_duration" {
+  description = "The maximum duration that can elapse before a new Cloud Storage file is created. Min 1 minute, max 10 minutes, default 5 minutes. May not exceed the subscription's acknowledgement deadline. A duration in seconds with up to nine fractional digits, ending with 's'. Example: \"3.5s\""
+  type        = string
+  default     = "300s"
+}
+
+variable "firehose_max_bytes" {
+  description = "The maximum bytes that can be written to a Cloud Storage file before a new file is created. Min 1 KB, max 10 GiB. The maxBytes limit may be exceeded in cases where messages are larger than the limit."
+  type        = number
+  default     = 10240
+}
+
 variable "iam_service_accounts" {
   description = "(DEPRECATED: use members instead) The list of IAM service accounts to create exclusive IAM permissions for the topic. Flattens a list of list if necessary."
   default     = []

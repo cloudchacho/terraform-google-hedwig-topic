@@ -10,8 +10,8 @@ resource "google_pubsub_subscription" "firehose" {
   cloud_storage_config {
     bucket          = var.firehose_bucket
     filename_prefix = local.firehose_prefix
-    max_bytes       = 1000
-    max_duration    = "60s"
+    max_bytes       = var.firehose_max_bytes
+    max_duration    = var.firehose_max_duration
     avro_config {
       write_metadata = true
     }
