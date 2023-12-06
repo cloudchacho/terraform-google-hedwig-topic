@@ -32,6 +32,13 @@ variable "firehose_max_bytes" {
   default     = 10240
 }
 
+variable "firehose_write_avro" {
+  description = "Write messages to Cloud Storage in Avro format with metadata."
+  type        = bool
+  default     = true
+  nullable    = false
+}
+
 variable "iam_service_accounts" {
   description = "(DEPRECATED: use members instead) The list of IAM service accounts to create exclusive IAM permissions for the topic. Flattens a list of list if necessary."
   default     = []

@@ -12,8 +12,11 @@ resource "google_pubsub_subscription" "firehose" {
     filename_prefix = local.firehose_prefix
     max_bytes       = var.firehose_max_bytes
     max_duration    = var.firehose_max_duration
-    avro_config {
-      write_metadata = true
+    dynamic "avro_config" {
+      for_each = var.firehose_write_avro ? [1] : []
+      content {
+        write_metadata = true
+      }
     }
   }
 }
