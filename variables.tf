@@ -2,41 +2,32 @@ variable "topic" {
   description = "Name of the Hedwig topic (should contain alphanumeric and dashes only by convention); unique across your infra"
 }
 
-variable "enable_firehose_all_messages" {
-  description = "Should all messages published to this topic be firehosed—that is, saved—to Cloud Storage"
-  type        = bool
-  default     = false
-}
+variable "firehose_config" {
+  description = "Variable firehose_config describes how to \"firehose\"—read as, \"save\"—Hedwig messages to Google Cloud Storage (GCS). Under the hood, firehose_config uses the cloud_storage_config google_pubsub_subscription Terraform block; for an example, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/pubsub_subscription#example-usage---pubsub-subscription-push-cloudstorage-avro page."
+  type = object({
+    # Declares the bucket to firehose messages to.
+    # Gotcha: Your bucket should already exist with complicated IAM permissions—see https://cloud.google.com/pubsub/docs/create-cloudstorage-subscription#assign_roles_cloudstorage page.
+    bucket = string
 
-variable "firehose_bucket" {
-  description = "Variable firehose_bucket declares the bucket for firehose—that is, saved—messages (should already exist)"
-  type        = string
-  default     = ""
-}
+    # Enables "firehose", which is cloudy jargon for "saving" messages to Google Cloud Storage.
+    enabled = optional(bool, false)
 
-variable "firehose_prefix" {
-  description = "Variable firehose_prefix declares the prefix for firehose—that is, saved—messages. Note: The \"<topic>\" string is replaced by var.topic; for example, \"myenv/<topic>/\" variable becomes \"myenv/mytopic/\" string. This confusing approach enables prefixing all topics in a for-loop."
-  type        = string
-  default     = ""
-}
+    # Declares the prefix for the Cloud Storage filename.
+    # Gotcha: This module sets local.filename_prefix to var.firehose_config.filename_prefix; but surprisingly, also replaces any "<topic>" string with var.topic; for example, "myenv/<topic>/" becomes "myenv/mytopic/" string. This confusing approach enables inserting var.topic into filename_prefix in a for-loop.
+    filename_prefix = optional(string, "")
 
-variable "firehose_max_duration" {
-  description = "The maximum duration that can elapse before a new Cloud Storage file is created. Min 1 minute, max 10 minutes, default 5 minutes. May not exceed the subscription's acknowledgement deadline. A duration in seconds with up to nine fractional digits, ending with 's'. Example: \"3.5s\""
-  type        = string
-  default     = "300s"
-}
+    # Declares the suffix for the Cloud Storage filename.
+    filename_suffix = optional(string, "")
 
-variable "firehose_max_bytes" {
-  description = "The maximum bytes that can be written to a Cloud Storage file before a new file is created. Min 1 KB, max 10 GiB. The maxBytes limit may be exceeded in cases where messages are larger than the limit."
-  type        = number
-  default     = 10240
-}
+    # Write messages to Cloud Storage in Avro format with metadata.
+    write_avro_format = optional(bool, false)
 
-variable "firehose_write_avro" {
-  description = "Write messages to Cloud Storage in Avro format with metadata."
-  type        = bool
-  default     = true
-  nullable    = false
+    # The maximum duration that can elapse before a new Cloud Storage file is created. Minimum is 1 minute, maximum is 10 minutes, default is 5 minutes. May not exceed the subscription's acknowledgement deadline. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s".
+    max_duration = optional(string, "300s")
+
+    # The maximum bytes that can be written to a Cloud Storage file before a new file is created. Min 1 KB, max 10 GiB. The maxBytes limit may be exceeded in cases where messages are larger than the limit. Defaults to 10*1024 B = 10 MiB.
+    max_bytes = optional(number, 10240)
+  })
 }
 
 variable "iam_service_accounts" {
