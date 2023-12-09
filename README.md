@@ -21,7 +21,7 @@ It's recommended that `topic` include your environment, as well as a major versi
 example, [JSON Schema](http://json-schema.org/) is a good way to version message content while also keeping it 
 human-readable. 
 
-Naming convention - lowercase alphanumeric and dashes only.
+Naming convention - lowercase alphanumeric and dashes only. The Pub/Sub topic name will be prefixed by `hedwig-`.
 
 Please note Google's restrictions (if not followed, errors may be confusing and often totally wrong):
 - [Resource names](https://cloud.google.com/pubsub/docs/admin#resource_names) 
@@ -51,8 +51,6 @@ resource "google_storage_bucket_iam_member" "hedwig_firehose_owner_iam" {
 ```
 
 Alternatively, you can restrict these permissions to the user Dataflow uses, which is: `{project number}-compute@developer.gserviceaccount.com`.
-
-The Pub/Sub topic name will be prefixed by `hedwig-`.
 
 ## Release Notes
 
