@@ -17,14 +17,14 @@ module "topic-dev-user-updated" {
 }
 ```
 
-It's recommended that `topic` include your environment, as well as a major version for the message schema. For 
-example, [JSON Schema](http://json-schema.org/) is a good way to version message content while also keeping it 
-human-readable. 
+It's recommended that `topic` include your environment, as well as a major version for the message schema. For
+example, [JSON Schema](http://json-schema.org/) is a good way to version message content while also keeping it
+human-readable.
 
 Naming convention - lowercase alphanumeric and dashes only. The Pub/Sub topic name will be prefixed by `hedwig-`.
 
 Please note Google's restrictions (if not followed, errors may be confusing and often totally wrong):
-- [Resource names](https://cloud.google.com/pubsub/docs/admin#resource_names) 
+- [Resource names](https://cloud.google.com/pubsub/docs/admin#resource_names)
 
 ### Firehose
 
@@ -56,7 +56,7 @@ If you're using the _`firehose_config`_ setting to save messages to a Google Clo
 
 ## Release Notes
 
-[Github Releases](https://github.com/cloudchacho/terraform-google-hedwig-topic/releases)
+[GitHub Releases](https://github.com/cloudchacho/terraform-google-hedwig-topic/releases)
 
 ## How to publish
 
