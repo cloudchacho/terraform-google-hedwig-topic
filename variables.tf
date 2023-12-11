@@ -28,6 +28,10 @@ variable "firehose_config" {
     # The maximum bytes that can be written to a Cloud Storage file before a new file is created. Min 1 KB, max 10 GiB. The maxBytes limit may be exceeded in cases where messages are larger than the limit. Defaults to 10*1024 B = 10 MiB.
     max_bytes = optional(number, 10240)
   })
+  default = {
+    # Gotcha: You can't actually set bucket to null; but this is just to express the fact that firehose_config variable is optional. If you do use firehose_config variable, then bucket is required.
+    bucket = null
+  }
 }
 
 variable "iam_service_accounts" {
