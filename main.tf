@@ -10,7 +10,7 @@ resource "google_pubsub_subscription" "firehose" {
     for_each = var.firehose_config.enabled ? [1] : []
     content {
       bucket          = var.firehose_config.bucket
-      filename_prefix = local.filename_prefix
+      filename_prefix = var.firehose_config.filename_prefix
       filename_suffix = var.firehose_config.filename_suffix
       max_bytes       = var.firehose_config.max_bytes
       max_duration    = var.firehose_config.max_duration
@@ -25,8 +25,6 @@ resource "google_pubsub_subscription" "firehose" {
 }
 
 locals {
-  # Gotcha: The "<topic>" string is replaced by var.topic; for example, "myenv/<topic>/" becomes "myenv/mytopic/" string. This confusing approach enables inserting var.topic into prefix in a for-loop.
-  filename_prefix      = replace(var.firehose_config.filename_prefix, "<topic>", var.topic)
   iam_service_accounts = formatlist("serviceAccount:%s", compact(flatten(var.iam_service_accounts)))
   iam_members          = sort(toset(concat(local.iam_service_accounts, compact(flatten(var.iam_members)))))
 }

@@ -14,7 +14,6 @@ variable "firehose_config" {
     enabled = optional(bool, false)
 
     # Declares the prefix for the Cloud Storage filename.
-    # Gotcha: This module sets local.filename_prefix to var.firehose_config.filename_prefix; but surprisingly, also replaces any "<topic>" string with var.topic; for example, "myenv/<topic>/" becomes "myenv/mytopic/" string. This confusing approach enables inserting var.topic into filename_prefix in a for-loop.
     filename_prefix = optional(string, "")
 
     # Declares the suffix for the Cloud Storage filename.
