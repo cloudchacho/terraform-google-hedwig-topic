@@ -3,11 +3,11 @@ resource "google_pubsub_topic" "topic" {
 }
 
 resource "google_pubsub_subscription" "firehose" {
-  count = var.firehose_config.enabled ? 1 : 0
+  count = var.firehose_config != null ? 1 : 0
   name  = "hedwig-${var.topic}-firehose"
   topic = "hedwig-${var.topic}"
   dynamic "cloud_storage_config" {
-    for_each = var.firehose_config.enabled ? [1] : []
+    for_each = var.firehose_config != null ? [1] : []
     content {
       bucket          = var.firehose_config.bucket
       filename_prefix = var.firehose_config.filename_prefix

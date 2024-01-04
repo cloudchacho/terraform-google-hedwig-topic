@@ -7,11 +7,7 @@ variable "firehose_config" {
   type = object({
     # Declares the bucket to firehose messages to.
     # Gotcha: Your bucket should already exist with complicated IAM permissions—see https://cloud.google.com/pubsub/docs/create-cloudstorage-subscription#assign_roles_cloudstorage page.
-    # Gotcha: You can't actually set bucket to null; but this null default is just to express the fact that firehose_config variable is optional and if you do set firehose_config.enabled = true; but don't set bucket, then the plan will fail.
-    bucket = optional(string, null)
-
-    # Enables "firehose", which is cloudy jargon for "saving" messages to Google Cloud Storage.
-    enabled = optional(bool, false)
+    bucket = string
 
     # Declares the prefix for the Cloud Storage filename.
     filename_prefix = optional(string, "")
@@ -28,8 +24,7 @@ variable "firehose_config" {
     # The maximum bytes that can be written to a Cloud Storage file before a new file is created. Min 1 KB, max 10 GiB. The maxBytes limit may be exceeded in cases where messages are larger than the limit. Defaults to 10*1024 B = 10 MiB.
     max_bytes = optional(number, 10240)
   })
-  default  = {}
-  nullable = false
+  default = null
 }
 
 variable "iam_service_accounts" {
