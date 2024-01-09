@@ -6,7 +6,7 @@ variable "firehose_config" {
   description = "Variable firehose_config describes how to \"firehose\"—read as, \"save\"—Hedwig messages to Google Cloud Storage (GCS). Under the hood, firehose_config uses the cloud_storage_config google_pubsub_subscription Terraform block; for an example, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/pubsub_subscription#example-usage---pubsub-subscription-push-cloudstorage-avro page."
   type = object({
     # Declares the bucket to firehose messages to.
-    # Gotcha: Your bucket should already exist with complicated IAM permissions—see https://cloud.google.com/pubsub/docs/create-cloudstorage-subscription#assign_roles_cloudstorage page.
+    # Note: For bucket permissions, see https://cloud.google.com/pubsub/docs/create-cloudstorage-subscription#assign_roles_cloudstorage page.
     bucket = string
 
     # Declares the prefix for the Cloud Storage filename.
