@@ -57,5 +57,5 @@ resource "google_pubsub_topic_iam_policy" "topic_policy" {
 
 data "google_storage_bucket" "firehose_bucket" {
   count = var.firehose_config != null ? 1 : 0
-  name = var.firehose_config.bucket
+  name  = var.firehose_config.bucket
 }
