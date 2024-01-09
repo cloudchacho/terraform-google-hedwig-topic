@@ -2,40 +2,29 @@ variable "topic" {
   description = "Name of the Hedwig topic (should contain alphanumeric and dashes only by convention); unique across your infra"
 }
 
-variable "enable_firehose_all_messages" {
-  description = "Should all messages published to this topic be firehosed into Cloud Storage"
-  type        = bool
-  default     = false
-}
+variable "firehose_config" {
+  description = "Variable firehose_config describes how to \"firehose\"—read as, \"save\"—Hedwig messages to Google Cloud Storage (GCS). Under the hood, firehose_config uses the cloud_storage_config google_pubsub_subscription Terraform block; for an example, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/pubsub_subscription#example-usage---pubsub-subscription-push-cloudstorage-avro page."
+  type = object({
+    # Declares the bucket to firehose messages to.
+    # Note: For bucket permissions, see https://cloud.google.com/pubsub/docs/create-cloudstorage-subscription#assign_roles_cloudstorage page.
+    bucket = string
 
-variable "dataflow_tmp_gcs_location" {
-  description = "A gs bucket location for storing temporary files by Google Dataflow, e.g. gs://myBucket/tmp"
-  default     = ""
-}
+    # Declares the prefix for the Cloud Storage filename.
+    filename_prefix = optional(string, "")
 
-variable "dataflow_template_gcs_path" {
-  description = "The template path for Google Dataflow, e.g. gs://dataflow-templates/2019-04-24-00/Cloud_PubSub_to_GCS_Text"
-  default     = ""
-}
+    # Declares the suffix for the Cloud Storage filename.
+    filename_suffix = optional(string, "")
 
-variable "dataflow_zone" {
-  description = "The zone to use for Dataflow. This may be required if it's not set at the provider level, or that zone doesn't support Dataflow regional endpoints (see https://cloud.google.com/dataflow/docs/concepts/regional-endpoints)"
-  default     = ""
-}
+    # Write messages to Cloud Storage in Avro format with metadata.
+    write_avro_format = optional(bool, false)
 
-variable "dataflow_region" {
-  description = "The region to use for Dataflow. This may be required if it's not set at the provider level, or you want to use a region different from the zone (see https://cloud.google.com/dataflow/docs/concepts/regional-endpoints)"
-  default     = ""
-}
+    # The maximum duration that can elapse before a new Cloud Storage file is created. Minimum is 1 minute, maximum is 10 minutes, default is 5 minutes. May not exceed the subscription's acknowledgement deadline. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s".
+    max_duration = optional(string, "300s")
 
-variable "dataflow_output_directory" {
-  description = "A gs bucket location for storing output files by Google Dataflow, e.g. gs://myBucket/hedwigBackup"
-  default     = ""
-}
-
-variable "dataflow_output_filename_prefix" {
-  description = "Filename prefix for output files by Google Dataflow (defaults to subscription name)"
-  default     = ""
+    # The maximum bytes that can be written to a Cloud Storage file before a new file is created. Min 1 KB, max 10 GiB. The maxBytes limit may be exceeded in cases where messages are larger than the limit. Defaults to 10*1024 B = 10 MiB.
+    max_bytes = optional(number, 10240)
+  })
+  default = null
 }
 
 variable "iam_service_accounts" {
@@ -45,27 +34,5 @@ variable "iam_service_accounts" {
 
 variable "iam_members" {
   description = "The list of IAM members to create exclusive IAM permissions for the topic. Flattens a list of list if necessary. The values must include appropriate IAM prefix, e.g. `group:` for google groups."
-  default     = []
-}
-
-variable "enable_alerts" {
-  description = "Should alerting be generated?"
-  type        = bool
-  default     = false
-}
-
-variable "alerting_project" {
-  description = "The project where alerting resources should be created (defaults to current project)"
-  default     = ""
-}
-
-variable "dataflow_freshness_alert_threshold" {
-  description = "Threshold for alerting on Dataflow freshness in seconds"
-  default     = 1800 # 30 mins
-}
-
-variable "dataflow_freshness_alert_notification_channels" {
-  description = "Stackdriver Notification Channels for dataflow alarm for freshness (required if alerting is on)"
-  type        = list(string)
   default     = []
 }
