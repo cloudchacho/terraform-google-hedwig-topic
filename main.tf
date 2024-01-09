@@ -5,7 +5,7 @@ resource "google_pubsub_topic" "topic" {
 resource "google_pubsub_subscription" "firehose" {
   count = var.firehose_config != null ? 1 : 0
   name  = "hedwig-${var.topic}-firehose"
-  topic = "hedwig-${var.topic}"
+  topic = google_pubsub_topic.topic.id
   cloud_storage_config {
     bucket          = var.firehose_config.bucket
     filename_prefix = var.firehose_config.filename_prefix
