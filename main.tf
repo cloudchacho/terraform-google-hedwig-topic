@@ -7,7 +7,7 @@ resource "google_pubsub_subscription" "firehose" {
   name  = "hedwig-${var.topic}-firehose"
   topic = google_pubsub_topic.topic.id
   cloud_storage_config {
-    bucket          = data.google_storage_bucket.firehose_bucket.name
+    bucket          = data.google_storage_bucket.firehose_bucket[0].name
     filename_prefix = var.firehose_config.filename_prefix
     filename_suffix = var.firehose_config.filename_suffix
     max_bytes       = var.firehose_config.max_bytes
@@ -20,7 +20,7 @@ resource "google_pubsub_subscription" "firehose" {
     }
   }
   depends_on = [
-    data.google_storage_bucket.firehose_bucket,
+    data.google_storage_bucket.firehose_bucket[0],
     # Todo: Add explicit bucket IAM permissions dependency.
   ]
 }
@@ -56,5 +56,6 @@ resource "google_pubsub_topic_iam_policy" "topic_policy" {
 }
 
 data "google_storage_bucket" "firehose_bucket" {
+  count = var.firehose_config != null ? 1 : 0
   name = var.firehose_config.bucket
 }
