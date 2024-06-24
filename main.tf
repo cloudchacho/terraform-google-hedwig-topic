@@ -6,6 +6,11 @@ resource "google_pubsub_subscription" "firehose" {
   count = var.firehose_config != null ? 1 : 0
   name  = "hedwig-${var.topic}-firehose"
   topic = google_pubsub_topic.topic.id
+
+  expiration_policy {
+    ttl = ""
+  }
+
   cloud_storage_config {
     bucket          = data.google_storage_bucket.firehose_bucket[0].name
     filename_prefix = var.firehose_config.filename_prefix
